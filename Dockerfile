@@ -3,16 +3,21 @@ FROM php:8.3-cli
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
+    zip \
+    libzip-dev \
     libpng-dev \
     libjpeg62-turbo-dev \
-    libfreetype6-dev \
-    zip
+    libfreetype6-dev
 
 RUN docker-php-ext-configure gd \
     --with-freetype \
     --with-jpeg
 
-RUN docker-php-ext-install gd pdo pdo_mysql
+RUN docker-php-ext-install \
+    gd \
+    zip \
+    pdo \
+    pdo_mysql
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
@@ -21,8 +26,6 @@ WORKDIR /app
 COPY . .
 
 RUN composer install --optimize-autoloader --no-dev
-
-RUN php artisan config:clear
 
 EXPOSE 8080
 
