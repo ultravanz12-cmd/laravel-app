@@ -26,6 +26,9 @@ WORKDIR /app
 COPY . .
 
 RUN composer install --optimize-autoloader --no-dev
+RUN php artisan config:clear
+RUN php artisan cache:clear
+RUN php artisan config:cache
 
 EXPOSE 8080
 
