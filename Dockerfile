@@ -1,6 +1,5 @@
 FROM php:8.2-cli
 
-# Install system dependencies
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -11,7 +10,7 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libxml2-dev
 
-# Install PHP extensions (IMPORTANT FIX HERE)
+# IMPORTANT FIX: enable zip extension
 RUN docker-php-ext-install \
     pdo \
     pdo_mysql \
@@ -22,21 +21,15 @@ RUN docker-php-ext-install \
     gd \
     zip
 
-# Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /app
 
 COPY . .
 
-# Install dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Permissions
 RUN chmod -R 775 storage bootstrap/cache
-
-# Cache config
-RUN php artisan config:cache
 
 EXPOSE 10000
 
