@@ -12,11 +12,11 @@ class SheetController extends Controller
 {
     public function index()
     {
-        # return view('index', [
-            #'sheets' => Sheet::latest()->get()
-        #]);
+        return view('index', [
+            'sheets' => Sheet::latest()->get()
+        ]);
 
-        return "Laravel is working!";
+        # return "Laravel is working!";
     }
 
     /**
