@@ -10,14 +10,27 @@ use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 
 class SheetController extends Controller
 {
-    public function index()
-    {
-        return view('index', [
-            'sheets' => Sheet::latest()->get()
-        ]);
+   # public function index()
+   # {
+     #   return view('index', [
+       #     'sheets' => Sheet::latest()->get()
+      #  ]);
 
         # return "Laravel is working!";
+   # }
+
+   public function index()
+{
+    try {
+        return Sheet::latest()->get();
+    } catch (\Throwable $e) {
+        return [
+            'error' => $e->getMessage(),
+            'file' => $e->getFile(),
+            'line' => $e->getLine()
+        ];
     }
+} 
 
     /**
      * UPLOAD (ONLY STORE FILE PATH — NO PARSING)
