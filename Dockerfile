@@ -8,11 +8,14 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     libpng-dev \
     libonig-dev \
-    libxml2-dev
+    libxml2-dev \
+    libpq-dev
 
-# IMPORTANT FIX: enable zip extension
+# IMPORTANT: add PostgreSQL support
 RUN docker-php-ext-install \
     pdo \
+    pdo_pgsql \
+    pgsql \
     pdo_mysql \
     mbstring \
     exif \
