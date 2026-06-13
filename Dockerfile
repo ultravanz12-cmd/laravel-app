@@ -6,33 +6,38 @@ RUN apt-get update && apt-get install -y \
     curl \
     zip \
     unzip \
+    libzip-dev \
     libpng-dev \
     libonig-dev \
     libxml2-dev
 
-# Install PHP extensions
-RUN docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd
+# Install PHP extensions (IMPORTANT FIX HERE)
+RUN docker-php-ext-install \
+    pdo \
+    pdo_mysql \
+    mbstring \
+    exif \
+    pcntl \
+    bcmath \
+    gd \
+    zip
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Set working directory
 WORKDIR /app
 
-# Copy project files
 COPY . .
 
 # Install dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Set permissions
+# Permissions
 RUN chmod -R 775 storage bootstrap/cache
 
-# Generate optimized cache
+# Cache config
 RUN php artisan config:cache
 
-# Expose port Render uses
 EXPOSE 10000
 
-# Start Laravel
 CMD php artisan serve --host=0.0.0.0 --port=10000
